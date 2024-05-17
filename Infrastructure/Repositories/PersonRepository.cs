@@ -14,12 +14,12 @@ namespace AdventureWorks.Infrastructure.Repositories
         }
 
         public async Task<IEnumerable<Person>> GetPersonList(int pageNumber, int pageSize)
-{
-    return await _context.People
-                         .Skip((pageNumber - 1) * pageSize)
-                         .Take(pageSize)
-                         .ToListAsync();
-}
+        {
+            return await _context.People
+                                .Skip((pageNumber - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync();
+        }
 
 
         public async Task<Person> GetPersonById(int id)
@@ -27,6 +27,16 @@ namespace AdventureWorks.Infrastructure.Repositories
             var person = await _context.People.FirstOrDefaultAsync(p => p.BusinessEntityId == id);
             return person;
         }
+
+        public async Task<IEnumerable<Person>> GetPersonByName(string name)
+        {
+            var people = await _context.People
+                                    .Where(p => p.FirstName.Contains(name) || p.LastName.Contains(name))
+                                    .ToListAsync();
+            return people;
+        }
+
+
 
         public async Task UpdatePerson(Person person)
         {

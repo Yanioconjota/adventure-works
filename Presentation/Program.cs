@@ -25,7 +25,7 @@ builder.Services.AddDbContext<AdventureWorksContext>(options =>
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 // Registrar casos de uso
-builder.Services.AddScoped<GetAllPeopleUseCase>(); 
+builder.Services.AddScoped<PersonUseCase>(); 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

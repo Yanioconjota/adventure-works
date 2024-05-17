@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using AdventureWorks.Application.UseCases;
+using Domain.Models;
 
 namespace AdventureWorks.Presentation.Controllers
 {
@@ -7,9 +8,9 @@ namespace AdventureWorks.Presentation.Controllers
     [Route("[controller]")]
     public class PersonController : ControllerBase
     {
-        private readonly GetAllPeopleUseCase _getAllPeopleUseCase;
+        private readonly PersonUseCase _getAllPeopleUseCase;
 
-        public PersonController(GetAllPeopleUseCase getAllPeopleUseCase)
+        public PersonController(PersonUseCase getAllPeopleUseCase)
         {
             _getAllPeopleUseCase = getAllPeopleUseCase;
         }
@@ -20,5 +21,59 @@ namespace AdventureWorks.Presentation.Controllers
             var people = await _getAllPeopleUseCase.ExecuteAsync(pageNumber, pageSize);
             return Ok(people);
         }
+
+        [HttpGet("GetPeopleByName")]
+        public async Task<IActionResult> GetByName([FromQuery] string name)
+        {
+            var people = await _getAllPeopleUseCase.GetPersonByName(name);
+            return Ok(people);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var person = await _getAllPeopleUseCase.GetPersonById(id);
+            if (person == null)
+            {
+                return NotFound();
+            }
+            return Ok(person);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] Person person)
+        {
+            if (id != person.BusinessEntityId)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await _getAllPeopleUseCase.UpdatePerson(person);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                // Aquí podrías manejar excepciones específicas si el elemento no existe o hay un conflicto.
+                return NotFound();
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _getAllPeopleUseCase.DeletePerson(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                // Manejar la excepción si la persona no existe o no se puede eliminar.
+                return NotFound();
+            }
+        }
+
     }
 }
