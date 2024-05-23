@@ -18,12 +18,17 @@ namespace AdventureWorks.Presentation.Controllers
             _getAllPeopleUseCase = getAllPeopleUseCase;
         }
 
-        [HttpGet("GetPeople")]
-        public async Task<IActionResult> Get([FromQuery] CancellationToken cancellationToken, int pageNumber = 1, [FromQuery] int pageSize = 50)
+       [HttpGet("GetPeople")]
+        public async Task<IActionResult> Get(
+            [FromQuery] CancellationToken cancellationToken,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string orderBy = "desc")
         {
-            var people = await _getAllPeopleUseCase.GetPersonList(cancellationToken, pageNumber, pageSize);
+            var people = await _getAllPeopleUseCase.GetPersonList(cancellationToken, pageNumber, pageSize, orderBy);
             return Ok(people);
         }
+
 
         [HttpGet("GetPeopleByName")]
         public async Task<IActionResult> GetByName([FromQuery] string name)

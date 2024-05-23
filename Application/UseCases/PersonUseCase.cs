@@ -12,9 +12,9 @@ namespace AdventureWorks.Application.UseCases
             _personRepository = personRepository;
         }
 
-        public async Task<IEnumerable<Person>> GetPersonList(CancellationToken cancellationToken, int pageNumber = 1, int pageSize = 50)
+        public async Task<IEnumerable<Person>> GetPersonList(CancellationToken cancellationToken, int pageNumber = 1, int pageSize = 10, string orderBy = "desc")
         {
-            return await _personRepository.GetPersonList(cancellationToken, pageNumber, pageSize);
+            return await _personRepository.GetPersonList(cancellationToken, pageNumber, pageSize, orderBy);
         }
 
         public async Task<IEnumerable<Person>> GetPersonByName(string name)

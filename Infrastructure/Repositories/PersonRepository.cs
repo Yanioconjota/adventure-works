@@ -13,18 +13,30 @@ namespace AdventureWorks.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Person>> GetPersonList(CancellationToken cancellationToken, int pageNumber, int pageSize)
+        public async Task<IEnumerable<Person>> GetPersonList(CancellationToken cancellationToken, int pageNumber, int pageSize, string orderBy)
         {
-            if (!cancellationToken.IsCancellationRequested)
-                return await _context.People
-                                .Skip((pageNumber - 1) * pageSize)
-                                .Take(pageSize)
-                                .ToListAsync();
-            {
-                return null;
-            }
+            IQueryable<Person> query =  _context.People.AsQueryable();
             
+            switch (orderBy.ToLower())
+            {
+                case "asc":
+                    query = query.OrderBy(p => p.BusinessEntityId);
+                    break;
+                case "desc":
+                    query = query.OrderByDescending(p => p.BusinessEntityId);
+                    break;
+                default:
+                    throw new ArgumentException("Invalid order by parameter");
+            }
+
+            // Paginación
+            query = query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize);
+
+            return await query.ToListAsync(cancellationToken);
         }
+
 
 
         public async Task<Person> GetPersonById(int id)
