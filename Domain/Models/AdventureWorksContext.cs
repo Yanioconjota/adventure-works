@@ -375,7 +375,7 @@ public partial class AdventureWorksContext : DbContext
                 });
 
             entity.Property(e => e.BusinessEntityId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasComment("Primary key for Person records.");
             entity.Property(e => e.AdditionalContactInfo).HasComment("Additional contact information about the person stored in xml format. ");
             entity.Property(e => e.Demographics).HasComment("Personal information such as hobbies, and income collected from online shoppers. Used for sales analysis.");

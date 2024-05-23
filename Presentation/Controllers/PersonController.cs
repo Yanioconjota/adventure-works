@@ -3,6 +3,7 @@ using AdventureWorks.Application.UseCases;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using AdventureWorks.Application.DTOs;
 
 namespace AdventureWorks.Presentation.Controllers
 {
@@ -43,10 +44,26 @@ namespace AdventureWorks.Presentation.Controllers
         }
 
         [HttpPost("AddPerson")]
-        public async Task<IActionResult> Add([FromBody] Person person)
+        public async Task<IActionResult> Add([FromBody] PersonDto personDto)
         {
             try
             {
+                var person = new Person
+                {
+                    PersonType = personDto?.PersonType ?? string.Empty,
+                    NameStyle = personDto?.NameStyle ?? false,
+                    Title = personDto?.Title,
+                    FirstName = personDto?.FirstName,
+                    MiddleName = personDto?.MiddleName,
+                    LastName = personDto?.LastName ?? string.Empty,
+                    Suffix = personDto?.Suffix,
+                    EmailPromotion = (int)(personDto?.EmailPromotion),
+                    AdditionalContactInfo = personDto?.AdditionalContactInfo,
+                    Demographics = personDto?.Demographics,
+                    Rowguid = Guid.NewGuid(),
+                    ModifiedDate = DateTime.UtcNow
+                };
+
                 var newPerson = await _getAllPeopleUseCase.AddPerson(person);
                 return CreatedAtAction(nameof(GetById), new { id = newPerson.BusinessEntityId }, newPerson);
             }
@@ -55,6 +72,8 @@ namespace AdventureWorks.Presentation.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
 
         [HttpPut("UpdatePerson")]
         public async Task<IActionResult> Update(int id, [FromBody] Person person)
