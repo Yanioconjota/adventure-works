@@ -6,7 +6,7 @@ namespace AdventureWorks.Domain.Interfaces
     {
         Task<IEnumerable<Person>> GetPersonList(CancellationToken cancellationToken, int pageNumber, int pageSize);
         Task<Person> GetPersonById(int id);
-        // Task<Person> AddAsync(Person person);
+        Task<Person> AddPerson(Person person);
         Task<IEnumerable<Person>> GetPersonByName(string name);
         Task UpdatePerson(Person person);
         Task DeletePerson(int id);

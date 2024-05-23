@@ -42,6 +42,20 @@ namespace AdventureWorks.Presentation.Controllers
             return Ok(person);
         }
 
+        [HttpPost("AddPerson")]
+        public async Task<IActionResult> Add([FromBody] Person person)
+        {
+            try
+            {
+                var newPerson = await _getAllPeopleUseCase.AddPerson(person);
+                return CreatedAtAction(nameof(GetById), new { id = newPerson.BusinessEntityId }, newPerson);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPut("UpdatePerson")]
         public async Task<IActionResult> Update(int id, [FromBody] Person person)
         {

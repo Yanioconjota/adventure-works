@@ -27,6 +27,11 @@ namespace AdventureWorks.Application.UseCases
             return await _personRepository.GetPersonById(id);
         }
 
+        public async Task<Person> AddPerson(Person person)
+        {
+            return await _personRepository.AddPerson(person);
+        }
+
         public async Task UpdatePerson(Person person)
         {
             await _personRepository.UpdatePerson(person);
