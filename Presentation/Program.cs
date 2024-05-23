@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", policy =>
-   policy.WithOrigins("http://localhost:5111") // Reemplazar <SwaggerPort> con el puerto real.
+   policy.WithOrigins("http://localhost:5111") // Replace with the real port.
          .AllowAnyHeader()
          .AllowAnyMethod());
 });
@@ -17,14 +17,14 @@ builder.Services.AddCors(options =>
 // Add services to the container.
 builder.Services.AddControllers();
 
-// A�adir el servicio de EF Core DbContext
+// Add a database context
 builder.Services.AddDbContext<AdventureWorksContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AdventureWorksDatabase")));
 
-// A�adir la configuraci�n para el repositorio
+// Add configuration for the repository
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
-// Registrar casos de uso
+// Register the use case
 builder.Services.AddScoped<PersonUseCase>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -40,9 +40,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseRouting(); // Asegúrate de que UseRouting está llamado antes de UseCors.
+app.UseRouting();
 
-app.UseCors("AllowSpecificOrigin"); // Aplica la política de CORS
+app.UseCors("AllowSpecificOrigin"); // Apply CORS
 
 app.UseHttpsRedirection();
 

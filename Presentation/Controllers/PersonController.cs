@@ -110,7 +110,6 @@ namespace AdventureWorks.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                // Manejar la excepción si la persona no existe o no se puede eliminar.
                 return NotFound();
             }
         }
