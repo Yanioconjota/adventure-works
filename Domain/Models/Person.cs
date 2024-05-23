@@ -98,7 +98,7 @@ public partial class Person
 
     [ForeignKey("BusinessEntityId")]
     [InverseProperty("Person")]
-    public virtual BusinessEntity BusinessEntity { get; set; } = null!;
+    public virtual BusinessEntity? BusinessEntity { get; set; }
 
     [InverseProperty("Person")]
     public virtual ICollection<BusinessEntityContact> BusinessEntityContacts { get; set; } = new List<BusinessEntityContact>();

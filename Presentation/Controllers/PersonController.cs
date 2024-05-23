@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using AdventureWorks.Application.UseCases;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace AdventureWorks.Presentation.Controllers
 {
@@ -16,9 +18,9 @@ namespace AdventureWorks.Presentation.Controllers
         }
 
         [HttpGet("GetPeople")]
-        public async Task<IActionResult> Get([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 50)
+        public async Task<IActionResult> Get([FromQuery] CancellationToken cancellationToken, int pageNumber = 1, [FromQuery] int pageSize = 50)
         {
-            var people = await _getAllPeopleUseCase.ExecuteAsync(pageNumber, pageSize);
+            var people = await _getAllPeopleUseCase.GetPersonList(cancellationToken, pageNumber, pageSize);
             return Ok(people);
         }
 
@@ -29,7 +31,7 @@ namespace AdventureWorks.Presentation.Controllers
             return Ok(people);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetpersonById")]
         public async Task<IActionResult> GetById(int id)
         {
             var person = await _getAllPeopleUseCase.GetPersonById(id);
@@ -40,7 +42,7 @@ namespace AdventureWorks.Presentation.Controllers
             return Ok(person);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("UpdatePerson")]
         public async Task<IActionResult> Update(int id, [FromBody] Person person)
         {
             if (id != person.BusinessEntityId)
@@ -53,14 +55,14 @@ namespace AdventureWorks.Presentation.Controllers
                 await _getAllPeopleUseCase.UpdatePerson(person);
                 return NoContent();
             }
-            catch (Exception ex)
+            catch (ValidationException ex)
             {
-                // Aquí podrías manejar excepciones específicas si el elemento no existe o hay un conflicto.
-                return NotFound();
+                return BadRequest(ex.Message);
             }
         }
 
-        [HttpDelete("{id}")]
+
+        [HttpDelete("DeletePerson")]
         public async Task<IActionResult> Delete(int id)
         {
             try

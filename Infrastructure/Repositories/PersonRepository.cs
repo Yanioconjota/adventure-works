@@ -13,12 +13,17 @@ namespace AdventureWorks.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Person>> GetPersonList(int pageNumber, int pageSize)
+        public async Task<IEnumerable<Person>> GetPersonList(CancellationToken cancellationToken, int pageNumber, int pageSize)
         {
-            return await _context.People
+            if (!cancellationToken.IsCancellationRequested)
+                return await _context.People
                                 .Skip((pageNumber - 1) * pageSize)
                                 .Take(pageSize)
                                 .ToListAsync();
+            {
+                return null;
+            }
+            
         }
 
 
@@ -40,9 +45,18 @@ namespace AdventureWorks.Infrastructure.Repositories
 
         public async Task UpdatePerson(Person person)
         {
-            _context.Entry(person).State = EntityState.Modified;
+            var existingPerson = await _context.People
+                .FirstOrDefaultAsync(p => p.BusinessEntityId == person.BusinessEntityId);
+
+            if (existingPerson == null)
+            {
+                throw new KeyNotFoundException("No se encontró la persona con el ID especificado.");
+            }
+
+            _context.Entry(existingPerson).CurrentValues.SetValues(person);
             await _context.SaveChangesAsync();
         }
+
 
         public async Task DeletePerson(int id)
         {
