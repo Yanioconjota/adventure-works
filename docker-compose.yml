@@ -1,0 +1,21 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    environment:
+      SA_PASSWORD: "Elasticp!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./scripts:/scripts
+      - ./backups:/scripts/backups
+    command: /bin/bash /scripts/init-db.sh
+
+  adventureworksapi:
+    build:
+      context: ./adventureworksapi
+      dockerfile: Dockerfile
+    ports:
+      - "7000:8080"
+    depends_on:
+      - sqlserver
