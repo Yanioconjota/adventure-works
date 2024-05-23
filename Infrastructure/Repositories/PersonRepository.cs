@@ -60,11 +60,55 @@ namespace AdventureWorks.Infrastructure.Repositories
 
         public async Task DeletePerson(int id)
         {
-            var person = await _context.People.FindAsync(id);
-            if (person != null)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                _context.People.Remove(person);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    // Delete related records in SalesOrderHeader
+                    var salesOrderHeaders = _context.SalesOrderHeaders.Where(soh => soh.Customer.PersonId == id);
+                    _context.SalesOrderHeaders.RemoveRange(salesOrderHeaders);
+
+                    // Delete related records in Customer
+                    var customers = _context.Customers.Where(c => c.PersonId == id);
+                    _context.Customers.RemoveRange(customers);
+
+                    // Delete related records in BusinessEntityContact
+                    var businessEntityContacts = _context.BusinessEntityContacts.Where(bec => bec.PersonId == id);
+                    _context.BusinessEntityContacts.RemoveRange(businessEntityContacts);
+
+                    // Delete related records in EmailAddress
+                    var emailAddresses = _context.EmailAddresses.Where(ea => ea.BusinessEntityId == id);
+                    _context.EmailAddresses.RemoveRange(emailAddresses);
+
+                    // Delete related records in PersonPhone
+                    var personPhones = _context.PersonPhones.Where(pp => pp.BusinessEntityId == id);
+                    _context.PersonPhones.RemoveRange(personPhones);
+
+                    // Delete related records in Password
+                    var passwords = _context.Passwords.Where(p => p.BusinessEntityId == id);
+                    _context.Passwords.RemoveRange(passwords);
+
+                    // Delete related records in PersonCreditCard
+                    var personCreditCards = _context.PersonCreditCards.Where(pcc => pcc.BusinessEntityId == id);
+                    _context.PersonCreditCards.RemoveRange(personCreditCards);
+
+                    // Finally, delete the record in Person
+                    var person = await _context.People.FindAsync(id);
+                    if (person != null)
+                    {
+                        _context.People.Remove(person);
+                    }
+
+                    await _context.SaveChangesAsync();
+
+                    // Complete the transaction if everything has been successful
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    // TODO: Handle failure
+                    transaction.Rollback();
+                }
             }
         }
     }
