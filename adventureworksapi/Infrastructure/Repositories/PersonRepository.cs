@@ -42,6 +42,10 @@ namespace AdventureWorks.Infrastructure.Repositories
         public async Task<Person> GetPersonById(int id)
         {
             var person = await _context.People.FirstOrDefaultAsync(p => p.BusinessEntityId == id);
+            if (person == null)
+            {
+                throw new KeyNotFoundException("No Person found with the specified ID.");
+            }
             return person;
         }
 
@@ -139,7 +143,6 @@ namespace AdventureWorks.Infrastructure.Repositories
                 }
                 catch (Exception)
                 {
-                    // TODO: Handle failure
                     transaction.Rollback();
                 }
             }

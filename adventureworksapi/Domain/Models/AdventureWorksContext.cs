@@ -98,15 +98,17 @@ public partial class AdventureWorksContext : DbContext
     public virtual DbSet<VStoreWithDemographic> VStoreWithDemographics { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    => optionsBuilder.UseSqlServer("Server=sqlserver;Database=AdventureWorks2017;User Id=sa;Password=Elasticp!;Encrypt=True;TrustServerCertificate=True");
+    => optionsBuilder.UseSqlServer("Server=sqlserver;Database=AdventureWorks2017;User Id=SA;Password=Elasticp!;Encrypt=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Address>(entity =>
         {
+            const string PersonSchema = "Person";
+
             entity.HasKey(e => e.AddressId).HasName("PK_Address_AddressID");
 
-            entity.ToTable("Address", "Person", tb => tb.HasComment("Street address information for customers, employees, and vendors."));
+            entity.ToTable("Address", PersonSchema, tb => tb.HasComment("Street address information for customers, employees, and vendors."));
 
             entity.Property(e => e.AddressId).HasComment("Primary key for Address records.");
             entity.Property(e => e.AddressLine1).HasComment("First street address line.");

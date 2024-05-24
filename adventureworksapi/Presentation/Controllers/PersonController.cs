@@ -58,13 +58,13 @@ namespace AdventureWorks.Presentation.Controllers
                     PersonType = personDto?.PersonType ?? string.Empty,
                     NameStyle = personDto?.NameStyle ?? false,
                     Title = personDto?.Title,
-                    FirstName = personDto?.FirstName,
+                    FirstName = personDto?.FirstName ?? string.Empty,
                     MiddleName = personDto?.MiddleName,
                     LastName = personDto?.LastName ?? string.Empty,
                     Suffix = personDto?.Suffix,
-                    EmailPromotion = (int)(personDto?.EmailPromotion),
-                    AdditionalContactInfo = personDto?.AdditionalContactInfo,
-                    Demographics = personDto?.Demographics,
+                    EmailPromotion = personDto?.EmailPromotion ?? 0,
+                    AdditionalContactInfo = null,
+                    Demographics = null,
                     Rowguid = Guid.NewGuid(),
                     ModifiedDate = DateTime.UtcNow
                 };
@@ -77,8 +77,6 @@ namespace AdventureWorks.Presentation.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-
 
         [HttpPut("UpdatePerson")]
         public async Task<IActionResult> Update(int id, [FromBody] Person person)
@@ -108,7 +106,7 @@ namespace AdventureWorks.Presentation.Controllers
                 await _getAllPeopleUseCase.DeletePerson(id);
                 return NoContent();
             }
-            catch (Exception ex)
+            catch
             {
                 return NotFound();
             }
