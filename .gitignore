@@ -89,9 +89,9 @@ ScaffoldingReadMe.txt
 *.userosscache
 *.suo
 *.cache
-*.csproj
+# *.csproj
 *.vbproj
-*.sln
+# *.sln
 *.swp
 *.un~
 *.bak
