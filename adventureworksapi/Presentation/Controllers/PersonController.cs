@@ -79,16 +79,33 @@ namespace AdventureWorks.Presentation.Controllers
         }
 
         [HttpPut("UpdatePerson")]
-        public async Task<IActionResult> Update(int id, [FromBody] Person person)
+        public async Task<IActionResult> Update([FromQuery] int id, [FromBody] PersonDto personDto)
         {
-            if (id != person.BusinessEntityId)
+            var personToUpdate = new Person
             {
-                return BadRequest();
+                BusinessEntityId = id,
+                PersonType = personDto?.PersonType ?? string.Empty,
+                NameStyle = personDto?.NameStyle ?? false,
+                Title = personDto?.Title,
+                FirstName = personDto?.FirstName ?? string.Empty,
+                MiddleName = personDto?.MiddleName,
+                LastName = personDto?.LastName ?? string.Empty,
+                Suffix = personDto?.Suffix,
+                EmailPromotion = personDto?.EmailPromotion ?? 0,
+                AdditionalContactInfo = null,
+                Demographics = null,
+                Rowguid = Guid.NewGuid(),
+                ModifiedDate = DateTime.UtcNow
+            };
+
+            if (id != personToUpdate.BusinessEntityId)
+            {
+                return BadRequest("Mismatched ID");
             }
 
             try
             {
-                await _getAllPeopleUseCase.UpdatePerson(person);
+                await _getAllPeopleUseCase.UpdatePerson(personToUpdate);
                 return NoContent();
             }
             catch (ValidationException ex)
@@ -96,6 +113,7 @@ namespace AdventureWorks.Presentation.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
 
 
         [HttpDelete("DeletePerson")]
