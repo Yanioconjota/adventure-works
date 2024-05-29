@@ -5,12 +5,12 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 # Copia el archivo de solución
-COPY ["AdventureWorksApi.sln", "./"]
+COPY ["adventureworksapi/AdventureWorksApi.sln", "./"]
 # Copia todos los archivos de proyecto csproj
-COPY ["Presentation/Presentation.csproj", "Presentation/"]
-COPY ["Application/Application.csproj", "Application/"]
-COPY ["Domain/Domain.csproj", "Domain/"]
-COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+COPY ["adventureworksapi/Presentation/Presentation.csproj", "Presentation/"]
+COPY ["adventureworksapi/Application/Application.csproj", "Application/"]
+COPY ["adventureworksapi/Domain/Domain.csproj", "Domain/"]
+COPY ["adventureworksapi/Infrastructure/Infrastructure.csproj", "Infrastructure/"]
 
 # Restaura las dependencias y herramientas de todos los proyectos
 RUN dotnet restore "Presentation/Presentation.csproj"
@@ -18,10 +18,10 @@ RUN dotnet restore "Application/Application.csproj"
 RUN dotnet restore "Domain/Domain.csproj"
 RUN dotnet restore "Infrastructure/Infrastructure.csproj"
 
-COPY ["Presentation/", "Presentation/"]
-COPY ["Application/", "Application/"]
-COPY ["Domain/", "Domain/"]
-COPY ["Infrastructure/", "Infrastructure/"]
+COPY ["adventureworksapi/Presentation/", "Presentation/"]
+COPY ["adventureworksapi/Application/", "Application/"]
+COPY ["adventureworksapi/Domain/", "Domain/"]
+COPY ["adventureworksapi/Infrastructure/", "Infrastructure/"]
 
 WORKDIR "/src/Presentation"
 RUN dotnet build "Presentation.csproj" -c Release -o /app/build
