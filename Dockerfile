@@ -4,24 +4,15 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-# Copia el archivo de solución
+# Copia el archivo de solución y todos los proyectos
 COPY ["adventureworksapi/AdventureWorksApi.sln", "./"]
-# Copia todos los archivos de proyecto csproj
-COPY ["adventureworksapi/Presentation/Presentation.csproj", "Presentation/"]
-COPY ["adventureworksapi/Application/Application.csproj", "Application/"]
-COPY ["adventureworksapi/Domain/Domain.csproj", "Domain/"]
-COPY ["adventureworksapi/Infrastructure/Infrastructure.csproj", "Infrastructure/"]
-
-# Restaura las dependencias y herramientas de todos los proyectos
-RUN dotnet restore "Presentation/Presentation.csproj"
-RUN dotnet restore "Application/Application.csproj"
-RUN dotnet restore "Domain/Domain.csproj"
-RUN dotnet restore "Infrastructure/Infrastructure.csproj"
-
 COPY ["adventureworksapi/Presentation/", "Presentation/"]
 COPY ["adventureworksapi/Application/", "Application/"]
 COPY ["adventureworksapi/Domain/", "Domain/"]
 COPY ["adventureworksapi/Infrastructure/", "Infrastructure/"]
+
+# Restaurar dependencias usando el archivo .sln
+RUN dotnet restore
 
 WORKDIR "/src/Presentation"
 RUN dotnet build "Presentation.csproj" -c Release -o /app/build

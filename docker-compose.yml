@@ -1,3 +1,4 @@
+version: '3'
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -9,6 +10,7 @@ services:
     volumes:
       - ./scripts:/scripts
       - ./backups:/scripts/backups
+    user: root  # Ejecutar como root para permisos de instalación
     command: /bin/bash /scripts/init-db.sh
 
   adventureworksapi:
