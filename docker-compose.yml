@@ -5,23 +5,22 @@ services:
     build:
       context: ./scripts
       dockerfile: sqlserver.Dockerfile
-    environment:
-      SA_PASSWORD: "${SA_PASSWORD}" # Contraseña del administrador (SA)
-      ACCEPT_EULA: "${ACCEPT_EULA}" # Aceptar el EULA
+    env_file:
+      - ./adventureworksapi/Presentation/.env  # Ruta al archivo .env
     ports:
-      - "1433:1433" # Puerto de SQL Server
+      - "1433:1433"
     volumes:
-      - ./scripts:/scripts # Scripts de inicialización
-      - ./backups:/scripts/backups # Backups de la base de datos
-    command: /bin/bash /scripts/init-db.sh # Comando para inicializar la base de datos
+      - ./scripts:/scripts
+      - ./backups:/scripts/backups
+    command: /bin/bash /scripts/init-db.sh
 
   adventureworksapi:
     build:
-      context: ./
+      context: .
       dockerfile: Dockerfile
+    env_file:
+      - ./adventureworksapi/Presentation/.env  # Ruta al archivo .env
     ports:
-      - "8080:8080" # Puerto de la API
+      - "8080:8080"
     depends_on:
-      - sqlserver # Espera que SQL Server esté activo antes de iniciarse
-    environment:
-      DB_CONNECTION_STRING: ${DB_CONNECTION_STRING}
+      - sqlserver
