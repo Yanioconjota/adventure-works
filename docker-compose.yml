@@ -1,9 +1,12 @@
+version: "3.8"
+
 services:
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    environment:
-      SA_PASSWORD: "Elasticp!"
-      ACCEPT_EULA: "Y"
+    build:
+      context: ./scripts
+      dockerfile: sqlserver.Dockerfile
+    env_file:
+      - ./adventureworksapi/Presentation/.env  # Ruta al archivo .env
     ports:
       - "1433:1433"
     volumes:
@@ -13,9 +16,11 @@ services:
 
   adventureworksapi:
     build:
-      context: ./
+      context: .
       dockerfile: Dockerfile
+    env_file:
+      - ./adventureworksapi/Presentation/.env  # Ruta al archivo .env
     ports:
-      - "7000:8080"
+      - "8080:8080"
     depends_on:
       - sqlserver
