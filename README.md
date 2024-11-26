@@ -92,21 +92,21 @@ Esto hará lo siguiente:
 ```plaintext
 adventure-works/
 ├── adventureworksapi/
-│   ├── Application/          # Lógica de negocio
-│   ├── Domain/               # Entidades y modelos de datos
-│   ├── Infrastructure/       # Configuración de acceso a datos
-│   ├── Presentation/         # Controladores y capa web
-│   │   ├── .env              # Variables de entorno para la API
-│   │   ├── appsettings.json  # Configuración de la API
-│   └── Dockerfile            # Dockerfile para la API
+│   ├── Application/            # Lógica de negocio
+│   ├── Domain/                 # Entidades y modelos de datos
+│   ├── Infrastructure/         # Configuración de acceso a datos
+│   ├── Presentation/           # Controladores y capa web
+│   │   ├── .env                # Variables de entorno para la API
+│   │   ├── appsettings.json    # Configuración de la API
+│   └── Dockerfile              # Dockerfile para la API
 ├── scripts/
-│   ├── sqlserver.Dockerfile  # Dockerfile para SQL Server
-│   ├── init-db.sh            # Script de inicialización de la base de datos
-│   └── backups/
-│       └── AdventureWorks2017.bak  # Backup de la base de datos
-├── .env                      # Variables de entorno globales
-├── docker-compose.yml        # Archivo de configuración de Docker Compose
-└── README.md                 # Este archivo
+│   ├── sqlserver.Dockerfile    # Dockerfile para SQL Server
+│   └── init-db.sh              # Script de inicialización de la base de datos
+├── backups/
+│   └── AdventureWorks2017.bak  # Backup de la base de datos
+├── .env                        # Variables de entorno globales
+├── docker-compose.yml          # Archivo de configuración de Docker Compose
+└── README.md                   # Este archivo
 ```
 
 ---
