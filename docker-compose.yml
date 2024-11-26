@@ -1,21 +1,27 @@
+version: "3.8"
+
 services:
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    build:
+      context: ./scripts
+      dockerfile: sqlserver.Dockerfile
     environment:
-      SA_PASSWORD: "Elasticp!"
-      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "${SA_PASSWORD}" # Contraseña del administrador (SA)
+      ACCEPT_EULA: "${ACCEPT_EULA}" # Aceptar el EULA
     ports:
-      - "1433:1433"
+      - "1433:1433" # Puerto de SQL Server
     volumes:
-      - ./scripts:/scripts
-      - ./backups:/scripts/backups
-    command: /bin/bash /scripts/init-db.sh
+      - ./scripts:/scripts # Scripts de inicialización
+      - ./backups:/scripts/backups # Backups de la base de datos
+    command: /bin/bash /scripts/init-db.sh # Comando para inicializar la base de datos
 
   adventureworksapi:
     build:
       context: ./
       dockerfile: Dockerfile
     ports:
-      - "7000:8080"
+      - "8080:8080" # Puerto de la API
     depends_on:
-      - sqlserver
+      - sqlserver # Espera que SQL Server esté activo antes de iniciarse
+    environment:
+      DB_CONNECTION_STRING: ${DB_CONNECTION_STRING}
