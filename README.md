@@ -156,4 +156,19 @@ Si los puertos `1433` o `8000` están ocupados:
     - "nuevo_puerto:1433" # Cambiar el puerto de SQL Server
   ```
 
+### **4. Error de formato en archivos sh**
+Convertir el archivo a formato `UNIX`
+1. Convertir desde VS Code
+2. Abre init-db.sh en Visual Studio Code.
+3. Mira en la parte inferior derecha de la ventana. Si ves CRLF, haz clic en ello.
+4. Cambia CRLF a LF.
+5. Guarda el archivo.
+6. Reconstruir y ejecutar
+```bash
+docker-compose down
+docker-compose up --build
+```
+
+Esto eliminará los caracteres `\r` y convertirá el archivo al formato `UNIX`.
+
 ---
