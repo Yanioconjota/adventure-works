@@ -4,7 +4,7 @@
 /opt/mssql/bin/sqlservr &
 
 # Esperar a que SQL Server esté completamente operativo
-sleep 15
+sleep 30
 
 # Ejecutar script SQL para restaurar la base de datos
 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Elasticp!" -d master -i /scripts/restore-database.sql

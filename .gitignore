@@ -273,3 +273,5 @@ src/SQL/src/DeploymentScripts/Output/**
 src/Upload/**
 src/WebUI/Angular/cypress/screenshots
 src/WebUI/Angular/cypress/videos
+
+.env

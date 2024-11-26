@@ -97,8 +97,26 @@ public partial class AdventureWorksContext : DbContext
 
     public virtual DbSet<VStoreWithDemographic> VStoreWithDemographics { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    => optionsBuilder.UseSqlServer("Server=sqlserver;Database=AdventureWorks2017;User Id=SA;Password=Elasticp!;Encrypt=True;TrustServerCertificate=True");
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    // {
+    //     var configuration = new ConfigurationBuilder()
+    //         .AddEnvironmentVariables()
+    //         .Build();
+
+    //     var connectionString = configuration.GetValue<string>("DB_CONNECTION_STRING");
+
+    //     Console.WriteLine($"Using connection string: {connectionString}");
+
+    //     if (string.IsNullOrEmpty(connectionString))
+    //     {
+    //         throw new Exception("La variable de entorno 'DB_CONNECTION_STRING' no está configurada.");
+    //     }
+
+    //     optionsBuilder.UseSqlServer(connectionString);
+    // }
+
+
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

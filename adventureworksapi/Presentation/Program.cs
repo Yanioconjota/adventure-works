@@ -4,28 +4,43 @@ using AdventureWorks.Infrastructure.Repositories;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using DotNetEnv; // Agregar el using para DotNetEnv
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Cargar variables del archivo .env
+DotNetEnv.Env.Load();
+Console.WriteLine($"DB_CONNECTION_STRING: {Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")}");
+
+// Agregar el proveedor de variables de entorno al builder
+builder.Configuration.AddEnvironmentVariables();
+
+// Registrar AdventureWorksContext con la cadena de conexión desde la variable de entorno
+builder.Services.AddDbContext<AdventureWorksContext>(options =>
+{
+    var connectionString = builder.Configuration["DB_CONNECTION_STRING"];
+    options.UseSqlServer(connectionString, sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null);
+    });
+});
+
+// Configuración de servicios
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add context
-builder.Services.AddDbContext<AdventureWorksContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AdventureWorksDatabase")));
-
-// Add configuration for the use case
+// Configuración de dependencias
 builder.Services.AddScoped<PersonUseCase>();
-// Add configuration for the repository
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
-
-// Registro de dependencias
 builder.Services.AddHttpClient();
 
-// Agrega soporte para controladores (sin vistas ni Razor Pages)
+// Agregar soporte para controladores
 builder.Services.AddControllers();
 
-// Configure CORS to allow specific origins
+// Configuración de CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
@@ -39,6 +54,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Configuración del middleware
 app.UseSwagger();
 app.UseSwaggerUI();
 
@@ -46,7 +62,7 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-// Apply CORS policy
+// Aplicar política de CORS
 app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthorization();
